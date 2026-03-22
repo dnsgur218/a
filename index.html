@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 Brawl Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Main Menu -->
+    <div id="screen-main" class="screen active">
+      <div class="main-container">
+        <div class="title-box">
+          <div class="title-icon">⚔️</div>
+          <h1>BRAWL SIMULATOR</h1>
+          <div class="title-sub">FFA 자동 전투</div>
+        </div>
+        <div class="menu-buttons">
+          <button class="btn btn-primary" onclick="Screen.show('character')">캐릭터 생성 / 편집</button>
+          <button class="btn btn-danger" onclick="Screen.show('lobby')">전투 시작</button>
+          <button class="btn btn-secondary" onclick="Screen.show('records')">전적 확인</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Character Creation -->
+    <div id="screen-character" class="screen">
+      <div class="char-container">
+        <div class="screen-header">
+          <button class="btn-back" onclick="Screen.show('main')">← 뒤로</button>
+          <h2>캐릭터 생성</h2>
+        </div>
+
+        <div class="char-name-row">
+          <label>이름:</label>
+          <input type="text" id="char-name" maxlength="10" placeholder="캐릭터 이름" value="Player">
+        </div>
+
+        <!-- Step 1: Stats -->
+        <div class="step-box">
+          <div class="step-title">STEP 1 — 스탯 분배 <span id="stat-remaining" class="pts-badge">남은: 0 / 16</span></div>
+          <div class="stat-grid" id="stat-grid"></div>
+          <div class="stat-summary" id="stat-summary"></div>
+        </div>
+
+        <!-- Step 2: Skills -->
+        <div class="step-box">
+          <div class="step-title">STEP 2 — 스킬 설정 <span id="skill-remaining" class="pts-badge">남은: 0</span></div>
+          <div id="skill-slots"></div>
+        </div>
+
+        <!-- Step 3: Priority -->
+        <div class="step-box">
+          <div class="step-title">STEP 3 — 스킬 우선도</div>
+          <div id="priority-list"></div>
+        </div>
+
+        <div class="char-actions">
+          <button class="btn btn-primary" id="btn-save-char" onclick="CharEditor.save()">완성</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lobby -->
+    <div id="screen-lobby" class="screen">
+      <div class="lobby-container">
+        <div class="screen-header">
+          <button class="btn-back" onclick="Screen.show('main')">← 뒤로</button>
+          <h2>전투 로비</h2>
+        </div>
+        <div class="participants-header">
+          참가자 <span id="lobby-count">0</span>/8
+        </div>
+        <div id="lobby-list" class="lobby-list"></div>
+        <div class="lobby-actions">
+          <button class="btn btn-secondary" onclick="Lobby.addAI()">+ AI 추가</button>
+          <button class="btn btn-danger" id="btn-start" onclick="Lobby.startBattle()">시 작 !</button>
+        </div>
+        <div id="lobby-msg" class="lobby-msg"></div>
+      </div>
+    </div>
+
+    <!-- Battle Screen -->
+    <div id="screen-battle" class="screen">
+      <div class="battle-container">
+        <div class="battle-header">
+          <span id="battle-turn">턴: 1</span>
+          <span id="battle-gas" class="gas-indicator">독가스: 없음</span>
+        </div>
+        <div class="battle-top">
+          <div id="hp-panel" class="hp-panel"></div>
+        </div>
+        <div class="battle-main">
+          <canvas id="arena-canvas" width="500" height="400"></canvas>
+        </div>
+        <div id="battle-log" class="battle-log"></div>
+        <div class="battle-controls">
+          <button class="btn btn-secondary" onclick="Battle.nextTurn()" id="btn-next">▶ 다음 턴</button>
+          <button class="btn btn-primary" onclick="Battle.toggleAuto()" id="btn-auto">⏩ 자동 진행</button>
+          <button class="btn btn-danger" onclick="Screen.show('lobby')">중단</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="screen-results" class="screen">
+      <div class="results-container">
+        <h2 class="results-title">🏆 전투 결과</h2>
+        <table class="results-table" id="results-table">
+          <thead>
+            <tr><th>순위</th><th>캐릭터</th><th>생존 턴</th><th>사인</th></tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+        <div id="results-stats" class="results-stats"></div>
+        <div class="results-actions">
+          <button class="btn btn-primary" onclick="Lobby.rematch()">다시 하기</button>
+          <button class="btn btn-secondary" onclick="Screen.show('lobby')">로비로</button>
+          <button class="btn btn-secondary" onclick="Screen.show('main')">메인으로</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Records Screen -->
+    <div id="screen-records" class="screen">
+      <div class="records-container">
+        <div class="screen-header">
+          <button class="btn-back" onclick="Screen.show('main')">← 뒤로</button>
+          <h2>전적 확인</h2>
+        </div>
+        <div id="records-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
